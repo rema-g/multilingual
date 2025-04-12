@@ -33,16 +33,12 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv = __importStar(require("dotenv"));
-dotenv.config();
-const config = {
-    development: {
-        username: process.env.DB_USERNAME || 'root',
-        password: process.env.DB_PASSWORD || '',
-        database: process.env.DB_NAME || 'multilingual',
-        host: process.env.DB_HOST || 'localhost',
-        port: Number(process.env.DB_PORT) || 3306,
-        dialect: process.env.DIALECT || 'mysql',
-    },
-};
-exports.default = config;
+const express_1 = require("express");
+const SubjectController = __importStar(require("../controllers/subject.controller"));
+const router = (0, express_1.Router)();
+router.get('/', SubjectController.getAll);
+router.get('/:id', SubjectController.getById);
+router.post('/', SubjectController.create);
+router.put('/:id', SubjectController.update);
+router.delete('/:id', SubjectController.remove);
+exports.default = router;

@@ -50,7 +50,6 @@ exports.default = {
                     type: sequelize_1.DataTypes.DATE,
                 },
             });
-            // Add composite unique constraint
             yield queryInterface.addIndex('SubjectTranslations', ['subjectId', 'languageCode'], {
                 unique: true,
                 name: 'unique_subject_language',
