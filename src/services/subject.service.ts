@@ -1,6 +1,9 @@
 import { SubjectRepository } from '../repositories/subject.repositories';
 import { Subject } from '../models/subject.model';
 import { SubjectTranslationAttributes } from '../models/subjecttranslation.model';
+import { HttpError } from '../utils/HttpError';
+import { SubjectErrors } from '../errors/message';
+const subjectRepository = new SubjectRepository();
 
 interface CreateSubjectInput {
   examType: string;
@@ -9,30 +12,30 @@ interface CreateSubjectInput {
 
 export class SubjectService {
   async getAllSubjects(): Promise<Subject[]> {
-    return SubjectRepository.findAll();
+    return subjectRepository.findAll();
   }
 
   async getSubjectById(id: number): Promise<Subject | null> {
-    return SubjectRepository.findById(id);
+    return subjectRepository.findById(id);
   }
 
   async createSubject(data: CreateSubjectInput): Promise<Subject> {
-    return SubjectRepository.create(data);
+    return subjectRepository.create(data);
   }
 
   async updateSubject(id: number, data: Partial<CreateSubjectInput>): Promise<Subject> {
-    const subject = await SubjectRepository.findById(id);
-    if (!subject) throw new Error('Subject not found');
-    return SubjectRepository.update(subject, data);
+    const subject = await subjectRepository.findById(id);
+    if (!subject) throw new HttpError(SubjectErrors.NOT_FOUND, 404);
+    return subjectRepository.update(subject, data);
   }
 
   async deleteSubject(id: number): Promise<boolean> {
-    const subject = await SubjectRepository.findById(id);
-    if (!subject) return false;
-    return SubjectRepository.delete(subject);
+    const subject = await subjectRepository.findById(id);
+    if (!subject) throw new HttpError(SubjectErrors.NOT_FOUND, 404);
+    return subjectRepository.delete(subject);
   }
 
   async getSubjects(filters: any): Promise<any> {
-    return SubjectRepository.findAllWithFilters(filters);
+    return subjectRepository.findAllWithFilters(filters);
   }
 }

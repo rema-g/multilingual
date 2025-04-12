@@ -5,45 +5,41 @@ import {
   SubjectAttributes,
   SubjectCreationAttributes,
 } from '../models/subject.model';
-import {
-  SubjectTranslationAttributes,
-} from '../models/subjecttranslation.model';
+import { SubjectTranslationAttributes } from '../models/subjecttranslation.model';
 
 interface SubjectWithTranslations extends SubjectCreationAttributes {
   translations?: SubjectTranslationAttributes[];
 }
 
-export const SubjectRepository = {
-  findAll: async (): Promise<Subject[]> => {
-    console.log('SubjectTranslation model:', models.SubjectTranslation);
-    return await models.Subject.findAll({ include: [{ model: models.SubjectTranslation, as: 'translations' }] });
-  },
+export class SubjectRepository {
+  async findAll(): Promise<Subject[]> {
+    return await models.Subject.findAll({
+      include: [{ model: models.SubjectTranslation, as: 'translations' }],
+    });
+  }
 
-  findById: async (id: number): Promise<Subject | null> => {
-    console.log('SubjectTranslation model:', models.SubjectTranslation);
-    return await models.Subject.findByPk(id, { include: [{ model: models.SubjectTranslation, as: 'translations' }] });
-  },
+  async findById(id: number): Promise<Subject | null> {
+    return await models.Subject.findByPk(id, {
+      include: [{ model: models.SubjectTranslation, as: 'translations' }],
+    });
+  }
 
-  create: async (data: SubjectWithTranslations): Promise<Subject> => {
-    console.log('SubjectTranslation model:', models.SubjectTranslation);
+  async create(data: SubjectWithTranslations): Promise<Subject> {
     return await models.Subject.create(data, {
       include: [{ model: models.SubjectTranslation, as: 'translations' }],
     });
-  },
+  }
 
-  update: async (
-    subject: Subject,
-    data: Partial<SubjectAttributes>
-  ): Promise<Subject> => {
+  async update(subject: Subject, data: Partial<SubjectAttributes>): Promise<Subject> {
     return await subject.update(data);
-  },
+  }
 
-  delete: async (subject: Subject): Promise<boolean> => {
+  async delete(subject: Subject): Promise<boolean> {
     await subject.destroy();
     return true;
-  },
+  }
 
-  findAllWithFilters: async ({
+  async findAllWithFilters({
     page,
     limit,
     search,
@@ -55,9 +51,17 @@ export const SubjectRepository = {
     search: string;
     sortBy: string;
     order: 'ASC' | 'DESC';
-  }) => {
+  }): Promise<{
+    data: Subject[];
+    pagination: {
+      totalItems: number;
+      totalPages: number;
+      currentPage: number;
+      pageSize: number;
+    };
+  }> {
     const offset = (page - 1) * limit;
-  
+
     const { count, rows } = await models.Subject.findAndCountAll({
       where: search
         ? {
@@ -71,7 +75,7 @@ export const SubjectRepository = {
       limit,
       offset,
     });
-  
+
     return {
       data: rows,
       pagination: {
@@ -81,5 +85,5 @@ export const SubjectRepository = {
         pageSize: limit,
       },
     };
-  }    
-};
+  }
+}
