@@ -25,13 +25,13 @@ initSubjectModel(sequelize);
 initSubjectTranslationModel(sequelize);
 
 Subject.hasMany(SubjectTranslation, {
-  foreignKey: 'subjectId',
+  foreignKey: 'subject_id',
   as: 'translations',
   onDelete: 'CASCADE',
 });
 
 SubjectTranslation.belongsTo(Subject, {
-  foreignKey: 'subjectId',
+  foreignKey: 'subject_id',
   as: 'subject',
 });
 

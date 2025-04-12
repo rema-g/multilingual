@@ -5,12 +5,12 @@ import {
   Optional,
   BelongsToGetAssociationMixin,
 } from 'sequelize';
-import { Subject } from './subject.model'; // update path if needed
+import { Subject } from './subject.model'; 
 
 interface SubjectTranslationAttributes {
   id: number;
-  subjectId: number;
-  languageCode: string;
+  subject_id: number;
+  language_code: string;
   name: string;
   description?: string;
 }
@@ -23,20 +23,19 @@ export class SubjectTranslation
   implements SubjectTranslationAttributes
 {
   public id!: number;
-  public subjectId!: number;
-  public languageCode!: string;
+  public subject_id!: number;
+  public language_code!: string;
   public name!: string;
   public description?: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  // Association
   public getSubject!: BelongsToGetAssociationMixin<Subject>;
 
   public static associate(models: any) {
     SubjectTranslation.belongsTo(models.Subject, {
-      foreignKey: 'subjectId',
+      foreignKey: 'subject_id',
       as: 'subject',
     });
   }
@@ -52,11 +51,11 @@ export const initSubjectTranslationModel = (
         autoIncrement: true,
         primaryKey: true,
       },
-      subjectId: {
+      subject_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      languageCode: {
+      language_code: {
         type: DataTypes.STRING(10),
         allowNull: false,
       },
@@ -70,7 +69,9 @@ export const initSubjectTranslationModel = (
       },
     },
     {
-      tableName: 'SubjectTranslations',
+      tableName: 'subjectTranslations',
+      underscored: true,
+      timestamps: true,
       sequelize,
     }
   );

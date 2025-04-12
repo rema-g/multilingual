@@ -5,33 +5,32 @@ import {
   Sequelize,
   HasManyGetAssociationsMixin,
 } from 'sequelize';
-import { SubjectTranslation } from './subjecttranslation.model'; // update path if needed
+import { SubjectTranslation } from './subjecttranslation.model';
 
 export interface SubjectAttributes {
   id: number;
-  examType: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  exam_type: string;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface SubjectCreationAttributes
-  extends Optional<SubjectAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+  extends Optional<SubjectAttributes, 'id' | 'created_at' | 'updated_at'> {}
 
 export class Subject
   extends Model<SubjectAttributes, SubjectCreationAttributes>
   implements SubjectAttributes
 {
   public id!: number;
-  public examType!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  public exam_type!: string;
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
 
-  // Association: one-to-many
   public getTranslations!: HasManyGetAssociationsMixin<SubjectTranslation>;
 
   public static associate(models: any) {
     Subject.hasMany(models.SubjectTranslation, {
-      foreignKey: 'subjectId',
+      foreignKey: 'subject_id',
       as: 'translations',
       onDelete: 'CASCADE',
     });
@@ -46,17 +45,19 @@ export const initSubjectModel = (sequelize: Sequelize): typeof Subject => {
         autoIncrement: true,
         primaryKey: true,
       },
-      examType: {
+      exam_type: {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
+      created_at: DataTypes.DATE,
+      updated_at: DataTypes.DATE,
     },
     {
       sequelize,
-      tableName: 'Subjects',
+      tableName: 'subjects',
       modelName: 'Subject',
+      underscored: true,
+      timestamps: true,
     }
   );
 
