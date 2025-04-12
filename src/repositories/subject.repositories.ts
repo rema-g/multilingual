@@ -14,15 +14,17 @@ interface SubjectWithTranslations extends SubjectCreationAttributes {
 export class SubjectRepository {
 
   async findById(id: number): Promise<Subject | null> {
-    return await models.Subject.findByPk(id, {
+   const subject = await models.Subject.findByPk(id, {
       include: [{ model: models.SubjectTranslation, as: 'translations' }],
     });
+    return subject;
   }
 
   async create(data: SubjectWithTranslations): Promise<Subject> {
-    return await models.Subject.create(data, {
+    const subject=  models.Subject.create(data, {
       include: [{ model: models.SubjectTranslation, as: 'translations' }],
     });
+    return subject;
   }
 
   async update(subject: Subject, data: Partial<SubjectWithTranslations>): Promise<Subject> {
@@ -103,7 +105,7 @@ export class SubjectRepository {
       offset,
     });
 
-    return {
+    const subject = {
       data: rows,
       pagination: {
         totalItems: count,
@@ -112,5 +114,6 @@ export class SubjectRepository {
         pageSize: limit,
       },
     };
+    return subject;
   }
 }
