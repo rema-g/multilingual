@@ -7,32 +7,32 @@ interface CreateSubjectInput {
   translations?: SubjectTranslationAttributes[];
 }
 
-export const SubjectService = {
-  getAllSubjects: () => {
+export class SubjectService {
+  async getAllSubjects(): Promise<Subject[]> {
     return SubjectRepository.findAll();
-  },
+  }
 
-  getSubjectById: (id: number) => {
+  async getSubjectById(id: number): Promise<Subject | null> {
     return SubjectRepository.findById(id);
-  },
+  }
 
-  createSubject: (data: CreateSubjectInput) => {
+  async createSubject(data: CreateSubjectInput): Promise<Subject> {
     return SubjectRepository.create(data);
-  },
+  }
 
-  updateSubject: async (id: number, data: Partial<CreateSubjectInput>) => {
+  async updateSubject(id: number, data: Partial<CreateSubjectInput>): Promise<Subject> {
     const subject = await SubjectRepository.findById(id);
     if (!subject) throw new Error('Subject not found');
-    return await SubjectRepository.update(subject, data);
-  },
+    return SubjectRepository.update(subject, data);
+  }
 
-  deleteSubject: async (id: number): Promise<boolean> => {
+  async deleteSubject(id: number): Promise<boolean> {
     const subject = await SubjectRepository.findById(id);
     if (!subject) return false;
-    return await SubjectRepository.delete(subject);
-  },
+    return SubjectRepository.delete(subject);
+  }
 
-  getSubjects: async (filters: any) => {
-    return await SubjectRepository.findAllWithFilters(filters);
-  }  
-};
+  async getSubjects(filters: any): Promise<any> {
+    return SubjectRepository.findAllWithFilters(filters);
+  }
+}

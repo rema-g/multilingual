@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { SubjectService } from '../services/subject.service';
 
+const subjectService = new SubjectService();
+
 export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const { page = 1, limit = 10, search = '', sortBy = 'createdAt', order = 'DESC' } = req.query;
@@ -13,7 +15,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
       limit: parseInt(limit.toString(), 10),
     };
 
-    const result = await SubjectService.getSubjects(filters);
+    const result = await subjectService.getSubjects(filters);
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching subjects', error: err });
@@ -22,7 +24,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 
 export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const data = await SubjectService.getSubjectById(+req.params.id);
+    const data = await subjectService.getSubjectById(+req.params.id);
     if (!data) {
       res.status(404).json({ message: 'Subject not found' });
       return;
@@ -36,7 +38,7 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
     console.log('Incoming request body:', req.body);
-    const created = await SubjectService.createSubject(req.body);
+    const created = await subjectService.createSubject(req.body);
     res.status(201).json(created);
   } catch (err) {
     res.status(500).json({ message: 'Error creating subject', error: err });
@@ -45,7 +47,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
 export const update = async (req: Request, res: Response): Promise<void> => {
   try {
-    const updated = await SubjectService.updateSubject(+req.params.id, req.body);
+    const updated = await subjectService.updateSubject(+req.params.id, req.body);
     if (!updated) {
       res.status(404).json({ message: 'Subject not found' });
       return;
@@ -58,7 +60,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
 
 export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
-    const success = await SubjectService.deleteSubject(+req.params.id);
+    const success = await subjectService.deleteSubject(+req.params.id);
     if (!success) {
       res.status(404).json({ message: 'Subject not found' });
       return;
