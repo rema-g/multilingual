@@ -2,22 +2,22 @@ import { QueryInterface, DataTypes } from 'sequelize';
 
 export default {
   async up(queryInterface: QueryInterface): Promise<void> {
-    await queryInterface.createTable('Subjects', {
+    await queryInterface.createTable('subjects', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      examType: {
+      exam_type: {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
       },
@@ -25,6 +25,6 @@ export default {
   },
 
   async down(queryInterface: QueryInterface): Promise<void> {
-    await queryInterface.dropTable('Subjects');
+    await queryInterface.dropTable('subjects');
   },
 };

@@ -2,23 +2,23 @@ import { QueryInterface, DataTypes } from 'sequelize';
 
 export default {
   async up(queryInterface: QueryInterface): Promise<void> {
-    await queryInterface.createTable('SubjectTranslations', {
+    await queryInterface.createTable('subjectTranslations', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      subjectId: {
+      subject_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'Subjects',
+          model: 'subjects',
           key: 'id',
         },
         onDelete: 'CASCADE',
       },
-      languageCode: {
+      language_code: {
         type: DataTypes.STRING(10),
         allowNull: false,
       },
@@ -30,23 +30,23 @@ export default {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
       },
     });
 
-    await queryInterface.addIndex('SubjectTranslations', ['subjectId', 'languageCode'], {
+    await queryInterface.addIndex('subjectTranslations', ['subject_id', 'language_code'], {
       unique: true,
       name: 'unique_subject_language',
     });
   },
 
   async down(queryInterface: QueryInterface): Promise<void> {
-    await queryInterface.dropTable('SubjectTranslations');
+    await queryInterface.dropTable('subjectTranslations');
   },
 };
