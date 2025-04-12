@@ -25,9 +25,41 @@ export class SubjectRepository {
     });
   }
 
-  async update(subject: Subject, data: Partial<SubjectAttributes>): Promise<Subject> {
-    return await subject.update(data);
-  }
+  async update(subject: Subject, data: Partial<SubjectWithTranslations>): Promise<Subject> {
+    if (data.exam_type && data.exam_type !== subject.exam_type) {
+      await subject.update({ exam_type: data.exam_type });
+    }
+  
+    if (data.translations && data.translations.length > 0) {
+      for (const translationData of data.translations) {
+        const existingTranslation = await models.SubjectTranslation.findOne({
+          where: {
+            subject_id: subject.id,
+            language_code: translationData.language_code,
+          },
+        });
+  
+        if (existingTranslation) {
+          if (
+            existingTranslation.name !== translationData.name ||
+            existingTranslation.description !== translationData.description
+          ) {
+            await existingTranslation.update({
+              name: translationData.name,
+              description: translationData.description,
+            });
+          }
+        } else {
+          await models.SubjectTranslation.create({
+            ...translationData,
+            subject_id: subject.id
+          });
+        }
+      }
+    }
+  
+    return this.findById(subject.id) as Promise<Subject>;
+  }  
 
   async delete(subject: Subject): Promise<boolean> {
     await subject.destroy();
@@ -60,7 +92,7 @@ export class SubjectRepository {
     const { count, rows } = await models.Subject.findAndCountAll({
       where: search
         ? {
-            examType: {
+            exam_type: {
               [Op.like]: `%${search}%`,
             },
           }
