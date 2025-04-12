@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.remove = exports.update = exports.create = exports.getById = exports.getAll = void 0;
 const subject_service_1 = require("../services/subject.service");
+const HttpError_1 = require("../utils/HttpError");
+const message_1 = require("../errors/message");
 const subjectService = new subject_service_1.SubjectService();
 const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -26,7 +28,7 @@ const getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json(result);
     }
     catch (err) {
-        res.status(500).json({ message: 'Error fetching subjects', error: err });
+        res.status(500).json({ message: message_1.SubjectErrors.FETCH_ERROR, error: err });
     }
 });
 exports.getAll = getAll;
@@ -34,52 +36,58 @@ const getById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield subjectService.getSubjectById(+req.params.id);
         if (!data) {
-            res.status(404).json({ message: 'Subject not found' });
+            res.status(404).json({ message: message_1.SubjectErrors.NOT_FOUND });
             return;
         }
         res.status(200).json(data);
     }
     catch (err) {
-        res.status(500).json({ message: 'Error fetching subject', error: err });
+        res.status(500).json({ message: message_1.SubjectErrors.FETCH_ERROR, error: err });
     }
 });
 exports.getById = getById;
 const create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('Incoming request body:', req.body);
         const created = yield subjectService.createSubject(req.body);
         res.status(201).json(created);
     }
     catch (err) {
-        res.status(500).json({ message: 'Error creating subject', error: err });
+        if (err instanceof HttpError_1.HttpError) {
+            res.status(err.statusCode).json({ message: err.message });
+        }
+        else {
+            res.status(500).json({ message: message_1.SubjectErrors.CREATE_ERROR, error: err });
+        }
     }
 });
 exports.create = create;
 const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const updated = yield subjectService.updateSubject(+req.params.id, req.body);
-        if (!updated) {
-            res.status(404).json({ message: 'Subject not found' });
-            return;
-        }
         res.status(200).json(updated);
     }
     catch (err) {
-        res.status(500).json({ message: 'Error updating subject', error: err });
+        if (err instanceof HttpError_1.HttpError) {
+            res.status(err.statusCode).json({ message: err.message });
+        }
+        else {
+            res.status(500).json({ message: message_1.SubjectErrors.UPDATE_ERROR, error: err });
+        }
     }
 });
 exports.update = update;
 const remove = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const success = yield subjectService.deleteSubject(+req.params.id);
-        if (!success) {
-            res.status(404).json({ message: 'Subject not found' });
-            return;
-        }
         res.status(200).json({ message: 'Subject deleted successfully' });
     }
     catch (err) {
-        res.status(500).json({ message: 'Error deleting subject', error: err });
+        if (err instanceof HttpError_1.HttpError) {
+            res.status(err.statusCode).json({ message: err.message });
+        }
+        else {
+            res.status(500).json({ message: message_1.SubjectErrors.DELETE_ERROR, error: err });
+        }
     }
 });
 exports.remove = remove;

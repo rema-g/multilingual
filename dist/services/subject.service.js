@@ -11,41 +11,44 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubjectService = void 0;
 const subject_repositories_1 = require("../repositories/subject.repositories");
+const HttpError_1 = require("../utils/HttpError");
+const message_1 = require("../errors/message");
+const subjectRepository = new subject_repositories_1.SubjectRepository();
 class SubjectService {
     getAllSubjects() {
         return __awaiter(this, void 0, void 0, function* () {
-            return subject_repositories_1.SubjectRepository.findAll();
+            return subjectRepository.findAll();
         });
     }
     getSubjectById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return subject_repositories_1.SubjectRepository.findById(id);
+            return subjectRepository.findById(id);
         });
     }
     createSubject(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            return subject_repositories_1.SubjectRepository.create(data);
+            return subjectRepository.create(data);
         });
     }
     updateSubject(id, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const subject = yield subject_repositories_1.SubjectRepository.findById(id);
+            const subject = yield subjectRepository.findById(id);
             if (!subject)
-                throw new Error('Subject not found');
-            return subject_repositories_1.SubjectRepository.update(subject, data);
+                throw new HttpError_1.HttpError(message_1.SubjectErrors.NOT_FOUND, 404);
+            return subjectRepository.update(subject, data);
         });
     }
     deleteSubject(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const subject = yield subject_repositories_1.SubjectRepository.findById(id);
+            const subject = yield subjectRepository.findById(id);
             if (!subject)
-                return false;
-            return subject_repositories_1.SubjectRepository.delete(subject);
+                throw new HttpError_1.HttpError(message_1.SubjectErrors.NOT_FOUND, 404);
+            return subjectRepository.delete(subject);
         });
     }
     getSubjects(filters) {
         return __awaiter(this, void 0, void 0, function* () {
-            return subject_repositories_1.SubjectRepository.findAllWithFilters(filters);
+            return subjectRepository.findAllWithFilters(filters);
         });
     }
 }
