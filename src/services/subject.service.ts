@@ -11,9 +11,6 @@ interface CreateSubjectInput {
 }
 
 export class SubjectService {
-  async getAllSubjects(): Promise<Subject[]> {
-    return subjectRepository.findAll();
-  }
 
   async getSubjectById(id: number): Promise<Subject | null> {
     return subjectRepository.findById(id);

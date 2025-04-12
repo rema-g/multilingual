@@ -12,11 +12,6 @@ interface SubjectWithTranslations extends SubjectCreationAttributes {
 }
 
 export class SubjectRepository {
-  async findAll(): Promise<Subject[]> {
-    return await models.Subject.findAll({
-      include: [{ model: models.SubjectTranslation, as: 'translations' }],
-    });
-  }
 
   async findById(id: number): Promise<Subject | null> {
     return await models.Subject.findByPk(id, {
