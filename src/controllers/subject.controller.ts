@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { SubjectService } from '../services/subject.service';
 import { HttpError } from '../utils/HttpError';
 import { SubjectErrors } from '../errors/message';
+import { ApiResponse } from '../utils/response.helpers'; 
 
 export class SubjectController {
   private static subjectService = new SubjectService();
@@ -10,10 +11,10 @@ export class SubjectController {
     try {
       const filters = this.parseFilters(req);
       const result = await this.subjectService.getSubjects(filters);
-      res.status(200).json(result);
+      ApiResponse.success(res, result, 'Subjects fetched successfully');
     } catch (err) {
-      console.error('Get all subjects error:', err); 
-      res.status(500).json({ message: SubjectErrors.FETCH_ERROR, error: err });
+      console.error('Get all subjects error:', err);
+      ApiResponse.error(res, err, SubjectErrors.FETCH_ERROR);
     }
   }
 
@@ -21,24 +22,23 @@ export class SubjectController {
     try {
       const subject = await this.subjectService.getSubjectById(+req.params.id);
       if (!subject) {
-        res.status(404).json({ message: SubjectErrors.NOT_FOUND });
-        return;
+        return ApiResponse.error(res, {}, SubjectErrors.NOT_FOUND, 404);
       }
-      res.status(200).json(subject);
+      ApiResponse.success(res, subject, 'Subject fetched successfully');
     } catch (err) {
-      res.status(500).json({ message: SubjectErrors.FETCH_ERROR, error: err });
+      ApiResponse.error(res, err, SubjectErrors.FETCH_ERROR);
     }
   }
 
   public static async create(req: Request, res: Response): Promise<void> {
     try {
       const subject = await this.subjectService.createSubject(req.body);
-      res.status(201).json(subject);
+      ApiResponse.success(res, subject, 'Subject created successfully', 201);
     } catch (err) {
       if (err instanceof HttpError) {
-        res.status(err.statusCode).json({ message: err.message });
+        ApiResponse.error(res, {}, err.message, err.statusCode);
       } else {
-        res.status(500).json({ message: SubjectErrors.CREATE_ERROR, error: err });
+        ApiResponse.error(res, err, SubjectErrors.CREATE_ERROR);
       }
     }
   }
@@ -46,12 +46,12 @@ export class SubjectController {
   public static async update(req: Request, res: Response): Promise<void> {
     try {
       const subject = await this.subjectService.updateSubject(+req.params.id, req.body);
-      res.status(200).json(subject);
+      ApiResponse.success(res, subject, 'Subject updated successfully');
     } catch (err) {
       if (err instanceof HttpError) {
-        res.status(err.statusCode).json({ message: err.message });
+        ApiResponse.error(res, {}, err.message, err.statusCode);
       } else {
-        res.status(500).json({ message: SubjectErrors.UPDATE_ERROR, error: err });
+        ApiResponse.error(res, err, SubjectErrors.UPDATE_ERROR);
       }
     }
   }
@@ -59,12 +59,12 @@ export class SubjectController {
   public static async remove(req: Request, res: Response): Promise<void> {
     try {
       await this.subjectService.deleteSubject(+req.params.id);
-      res.status(200).json({ message: 'Subject deleted successfully' });
+      ApiResponse.success(res, null, 'Subject deleted successfully');
     } catch (err) {
       if (err instanceof HttpError) {
-        res.status(err.statusCode).json({ message: err.message });
+        ApiResponse.error(res, {}, err.message, err.statusCode);
       } else {
-        res.status(500).json({ message: SubjectErrors.DELETE_ERROR, error: err });
+        ApiResponse.error(res, err, SubjectErrors.DELETE_ERROR);
       }
     }
   }
