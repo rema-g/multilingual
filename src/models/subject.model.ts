@@ -17,6 +17,12 @@ export class Subject
 {
   public id!: number;
   public exam_type!: string;
+  public status!: string;
+  public deleted_at!: {
+    created_at: Date;
+    updated_at: Date;
+    deleted_at: Date;
+  } | null;
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
 
@@ -42,6 +48,16 @@ export const initSubjectModel = (sequelize: Sequelize): typeof Subject => {
       exam_type: {
         type: DataTypes.STRING(100),
         allowNull: false,
+      },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'active',
+      },
+      deleted_at: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+        defaultValue: null,
       },
       created_at: DataTypes.DATE,
       updated_at: DataTypes.DATE,
