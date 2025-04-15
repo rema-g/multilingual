@@ -61,8 +61,21 @@ export class SubjectService {
   async deleteSubject(id: number): Promise<boolean> {
     const subject = await subjectRepository.findById(id);
     if (!subject) throw new HttpError(SubjectErrors.NOT_FOUND, 404);
-    return subjectRepository.delete(subject);
+  
+    const deletedAtPayload = {
+      created_at: subject.created_at,
+      updated_at: subject.updated_at,
+      deleted_at: new Date(),
+    };
+  
+    await subject.update({
+      status: 'inactive',
+      deleted_at: deletedAtPayload,
+    });
+  
+    return true;
   }
+  
 
   async getSubjects(filters: any): Promise<any> {
     return subjectRepository.findAllWithFilters(filters);
