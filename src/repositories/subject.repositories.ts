@@ -89,19 +89,23 @@ export class SubjectRepository {
   }> {
     const offset = (page - 1) * limit;
 
+    const whereClause: any = {
+      status: 'active',
+    };
+
+    if (search) {
+      whereClause.exam_type = {
+        [Op.like]: `%${search}%`,
+      };
+    }
+
     const { count, rows } = await models.Subject.findAndCountAll({
-      where: search
-        ? {
-            exam_type: {
-              [Op.like]: `%${search}%`,
-            },
-          }
-        : undefined,
-      include: [{ model: models.SubjectTranslation, as: "translations" }],
-      order: [[sortBy, order]],
-      limit,
-      offset,
-    });
+    where: whereClause,
+    include: [{ model: models.SubjectTranslation, as: "translations" }],
+    order: [[sortBy, order]],
+    limit,
+    offset,
+  });
 
     const subject = {
       data: rows,

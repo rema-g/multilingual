@@ -7,7 +7,7 @@ import { ApiResponse } from "../utils/response.helpers";
 export class SubjectController {
   private static subjectService = new SubjectService();
 
-  public static async getAllSubjects(
+  public static async get(
     req: Request,
     res: Response
   ): Promise<void> {
