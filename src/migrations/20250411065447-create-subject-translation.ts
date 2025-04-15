@@ -1,8 +1,8 @@
-import { QueryInterface, DataTypes } from 'sequelize';
+import { QueryInterface, DataTypes } from "sequelize";
 
 export default {
   async up(queryInterface: QueryInterface): Promise<void> {
-    await queryInterface.createTable('subjectTranslations', {
+    await queryInterface.createTable("subjectTranslations", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,10 +13,10 @@ export default {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'subjects',
-          key: 'id',
+          model: "subjects",
+          key: "id",
         },
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
       },
       language_code: {
         type: DataTypes.STRING(10),
@@ -40,13 +40,17 @@ export default {
       },
     });
 
-    await queryInterface.addIndex('subjectTranslations', ['subject_id', 'language_code'], {
-      unique: true,
-      name: 'unique_subject_language',
-    });
+    await queryInterface.addIndex(
+      "subjectTranslations",
+      ["subject_id", "language_code"],
+      {
+        unique: true,
+        name: "unique_subject_language",
+      }
+    );
   },
 
   async down(queryInterface: QueryInterface): Promise<void> {
-    await queryInterface.dropTable('subjectTranslations');
+    await queryInterface.dropTable("subjectTranslations");
   },
 };

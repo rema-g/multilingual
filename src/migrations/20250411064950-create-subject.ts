@@ -1,8 +1,8 @@
-import { QueryInterface, DataTypes } from 'sequelize';
+import { QueryInterface, DataTypes } from "sequelize";
 
 export default {
   async up(queryInterface: QueryInterface): Promise<void> {
-    await queryInterface.createTable('subjects', {
+    await queryInterface.createTable("subjects", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -25,6 +25,6 @@ export default {
   },
 
   async down(queryInterface: QueryInterface): Promise<void> {
-    await queryInterface.dropTable('subjects');
+    await queryInterface.dropTable("subjects");
   },
 };

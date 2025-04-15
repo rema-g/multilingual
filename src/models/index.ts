@@ -1,12 +1,12 @@
-import { Sequelize } from 'sequelize';
-import config from '../config/config';
-import { initSubjectModel, Subject } from './subject.model';
+import { Sequelize } from "sequelize";
+import config from "../config/config";
+import { initSubjectModel, Subject } from "./subject.model";
 import {
   initSubjectTranslationModel,
   SubjectTranslation,
-} from './subjecttranslation.model';
+} from "./subjecttranslation.model";
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || "development";
 const dbConfig = config[env];
 
 const sequelize = new Sequelize(
@@ -25,14 +25,14 @@ initSubjectModel(sequelize);
 initSubjectTranslationModel(sequelize);
 
 Subject.hasMany(SubjectTranslation, {
-  foreignKey: 'subject_id',
-  as: 'translations',
-  onDelete: 'CASCADE',
+  foreignKey: "subject_id",
+  as: "translations",
+  onDelete: "CASCADE",
 });
 
 SubjectTranslation.belongsTo(Subject, {
-  foreignKey: 'subject_id',
-  as: 'subject',
+  foreignKey: "subject_id",
+  as: "subject",
 });
 
 const models = {

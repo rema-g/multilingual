@@ -4,15 +4,18 @@ import {
   Sequelize,
   Optional,
   BelongsToGetAssociationMixin,
-} from 'sequelize';
-import { Subject } from './subject.model'; 
-import {SubjectTranslationAttributes} from "../dtos/subject.dto"
+} from "sequelize";
+import { Subject } from "./subject.model";
+import { SubjectTranslationAttributes } from "../dtos/subject.dto";
 
 export interface SubjectTranslationCreationAttributes
-  extends Optional<SubjectTranslationAttributes, 'id'> {}
+  extends Optional<SubjectTranslationAttributes, "id"> {}
 
 export class SubjectTranslation
-  extends Model<SubjectTranslationAttributes, SubjectTranslationCreationAttributes>
+  extends Model<
+    SubjectTranslationAttributes,
+    SubjectTranslationCreationAttributes
+  >
   implements SubjectTranslationAttributes
 {
   public id!: number;
@@ -28,8 +31,8 @@ export class SubjectTranslation
 
   public static associate(models: any) {
     SubjectTranslation.belongsTo(models.Subject, {
-      foreignKey: 'subject_id',
-      as: 'subject',
+      foreignKey: "subject_id",
+      as: "subject",
     });
   }
 }
@@ -62,7 +65,7 @@ export const initSubjectTranslationModel = (
       },
     },
     {
-      tableName: 'subjectTranslations',
+      tableName: "subjectTranslations",
       underscored: true,
       timestamps: true,
       sequelize,
@@ -72,6 +75,4 @@ export const initSubjectTranslationModel = (
   return SubjectTranslation;
 };
 
-export type {
-  SubjectTranslationAttributes
-};
+export type { SubjectTranslationAttributes };

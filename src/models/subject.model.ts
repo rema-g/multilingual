@@ -4,12 +4,12 @@ import {
   Optional,
   Sequelize,
   HasManyGetAssociationsMixin,
-} from 'sequelize';
-import { SubjectTranslation } from './subjecttranslation.model';
-import { SubjectAttributes} from '../dtos/subject.dto'
+} from "sequelize";
+import { SubjectTranslation } from "./subjecttranslation.model";
+import { SubjectAttributes } from "../dtos/subject.dto";
 
 export interface SubjectCreationAttributes
-  extends Optional<SubjectAttributes, 'id' | 'created_at' | 'updated_at'> {}
+  extends Optional<SubjectAttributes, "id" | "created_at" | "updated_at"> {}
 
 export class Subject
   extends Model<SubjectAttributes, SubjectCreationAttributes>
@@ -24,9 +24,9 @@ export class Subject
 
   public static associate(models: any) {
     Subject.hasMany(models.SubjectTranslation, {
-      foreignKey: 'subject_id',
-      as: 'translations',
-      onDelete: 'CASCADE',
+      foreignKey: "subject_id",
+      as: "translations",
+      onDelete: "CASCADE",
     });
   }
 }
@@ -48,8 +48,8 @@ export const initSubjectModel = (sequelize: Sequelize): typeof Subject => {
     },
     {
       sequelize,
-      tableName: 'subjects',
-      modelName: 'Subject',
+      tableName: "subjects",
+      modelName: "Subject",
       underscored: true,
       timestamps: true,
     }

@@ -1,10 +1,10 @@
-import express from 'express';
-import subjectRoutes from './routes/subject.routes';
+import express from "express";
+import subjectRoutes from "./routes/subject.routes";
 
 const app = express();
 app.use(express.json());
 
-app.use('/subjects', subjectRoutes);
+app.use("/subjects", subjectRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
