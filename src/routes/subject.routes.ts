@@ -1,12 +1,14 @@
-import { Router } from "express";
-import { SubjectController } from "../controllers/subject.controller";
+import { Router } from 'express';
+import { SubjectController } from '../controllers/subject.controller';
+import { validateQuery } from '../middleware/validateQuery.middleware';
+import { validateBody } from '../middleware/validateBody.middleware';
 
 const router = Router();
 
-router.get("/",  (req, res) => SubjectController.getAllSubjects(req, res));
-router.get("/:id", (req, res) => SubjectController.getById(req, res));
-router.post("/", (req, res) => SubjectController.create(req, res));
-router.put("/:id", (req, res) => SubjectController.update(req, res));
-router.delete("/:id", (req, res) => SubjectController.remove(req, res));
+router.get('/', validateQuery, (req, res) => SubjectController.getAllSubjects(req, res));
+router.get('/:id', validateQuery, (req, res) => SubjectController.getById(req, res));
+router.post('/', validateBody, (req, res) => SubjectController.create(req, res));
+router.put('/:id', validateBody, (req, res) => SubjectController.update(req, res));
+router.delete('/:id', validateQuery, (req, res) => SubjectController.remove(req, res));
 
 export default router;
