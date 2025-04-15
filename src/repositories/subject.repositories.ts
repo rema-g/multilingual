@@ -20,14 +20,14 @@ export class SubjectRepository {
     return subject;
   }
 
-  async create(data: SubjectWithTranslations): Promise<Subject> {
+  async create(data: SubjectWithTranslations): Promise<Subject | null> {
     const subject=  models.Subject.create(data, {
       include: [{ model: models.SubjectTranslation, as: 'translations' }],
     });
     return subject;
   }
 
-  async update(subject: Subject, data: Partial<SubjectWithTranslations>): Promise<Subject> {
+  async update(subject: Subject, data: Partial<SubjectWithTranslations>): Promise<Subject | null> {
     if (data.exam_type && data.exam_type !== subject.exam_type) {
       await subject.update({ exam_type: data.exam_type });
     }
@@ -60,7 +60,7 @@ export class SubjectRepository {
       }
     }
   
-    return this.findById(subject.id) as Promise<Subject>;
+    return this.findById(subject.id);
   }  
 
   async delete(subject: Subject): Promise<boolean> {

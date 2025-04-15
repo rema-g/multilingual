@@ -18,11 +18,11 @@ export class SubjectService {
     return subjectRepository.findById(id);
   }
 
-  async createSubject(data: CreateSubjectInput): Promise<Subject> {
+  async createSubject(data: CreateSubjectInput): Promise<Subject | null> {
     return subjectRepository.create(data);
   }
 
-  async updateSubject(id: number, data: Partial<CreateSubjectInput>): Promise<Subject> {
+  async updateSubject(id: number, data: Partial<CreateSubjectInput>): Promise<Subject | null> {
     const subject = await subjectRepository.findById(id);
     if (!subject) throw new HttpError(SubjectErrors.NOT_FOUND, 404);
   
