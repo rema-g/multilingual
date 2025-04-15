@@ -3,7 +3,7 @@ import { SubjectController } from "../controllers/subject.controller";
 
 const router = Router();
 
-router.get("/", SubjectController.getAllSubjects);
+router.get("/",  (req, res) => SubjectController.getAllSubjects(req, res));
 router.get("/:id", (req, res) => SubjectController.getById(req, res));
 router.post("/", (req, res) => SubjectController.create(req, res));
 router.put("/:id", (req, res) => SubjectController.update(req, res));
