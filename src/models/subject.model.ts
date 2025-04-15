@@ -6,13 +6,7 @@ import {
   HasManyGetAssociationsMixin,
 } from 'sequelize';
 import { SubjectTranslation } from './subjecttranslation.model';
-
-export interface SubjectAttributes {
-  id: number;
-  exam_type: string;
-  created_at?: Date;
-  updated_at?: Date;
-}
+import { SubjectAttributes} from '../dtos/subject.dto'
 
 export interface SubjectCreationAttributes
   extends Optional<SubjectAttributes, 'id' | 'created_at' | 'updated_at'> {}

@@ -6,16 +6,9 @@ import {
   BelongsToGetAssociationMixin,
 } from 'sequelize';
 import { Subject } from './subject.model'; 
+import {SubjectTranslationAttributes} from "../dtos/subject.dto"
 
-interface SubjectTranslationAttributes {
-  id: number;
-  subject_id: number;
-  language_code: string;
-  name: string;
-  description?: string;
-}
-
-interface SubjectTranslationCreationAttributes
+export interface SubjectTranslationCreationAttributes
   extends Optional<SubjectTranslationAttributes, 'id'> {}
 
 export class SubjectTranslation
@@ -80,6 +73,5 @@ export const initSubjectTranslationModel = (
 };
 
 export type {
-  SubjectTranslationAttributes,
-  SubjectTranslationCreationAttributes,
+  SubjectTranslationAttributes
 };

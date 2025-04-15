@@ -2,7 +2,6 @@ import models from '../models';
 import { Op } from 'sequelize';
 import {
   Subject,
-  SubjectAttributes,
   SubjectCreationAttributes,
 } from '../models/subject.model';
 import { SubjectTranslationAttributes } from '../models/subjecttranslation.model';
@@ -60,7 +59,7 @@ export class SubjectRepository {
       }
     }
   
-    return this.findById(subject.id);
+    return this.findById(subject.id) ;
   }  
 
   async delete(subject: Subject): Promise<boolean> {
