@@ -4,6 +4,7 @@ import {
     Optional,
     Sequelize,
   } from 'sequelize';
+  import bcrypt from 'bcrypt'; 
   
   export interface UserAttributes {
     id: number;
@@ -56,7 +57,7 @@ import {
           unique: true,
         },
         password: {
-          type: DataTypes.STRING(255), // longer for hashed passwords
+          type: DataTypes.STRING(255),
           allowNull: false,
         },
         role: {
@@ -86,6 +87,18 @@ import {
         modelName: 'User',
         underscored: true,
         timestamps: true,
+        hooks: {
+          beforeCreate: async (user: User) => {
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(user.password, salt);
+          },
+          beforeUpdate: async (user: User) => {
+            if (user.changed('password')) {
+                const salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(user.password, salt);
+            }
+          },
+        },
       }
     );
   
