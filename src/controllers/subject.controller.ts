@@ -91,12 +91,26 @@ export class SubjectController {
     }
   }
 
+  public static async removeTranslation(req: Request, res: Response): Promise<void> {
+    const { id, language_code } = req.params;
+    const task = "DELETE_TRANSLATION";
+  
+    try {
+      await this.subjectService.softDeleteTranslation(+id, language_code);
+      console.log(task + "_SUCCESS");
+      ApiResponse.success(res, null, "Translation soft deleted successfully");
+    } catch (err) {
+      console.error(task + "_ERROR", err);
+      ApiResponse.error(res, err, "Error soft deleting translation");
+    }
+  }
+
   private static parseFilters(req: Request) {
     const {
       page = 1,
       limit = 10,
       search = "",
-      sortBy = "createdAt",
+      sortBy = "created_at",
       order = "DESC",
     } = req.query;
 

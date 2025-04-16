@@ -17,4 +17,12 @@ export interface SubjectTranslationAttributes {
   language_code: string;
   name: string;
   description?: string;
+  status?: string;
+  deleted_at?: {
+    created_at: Date;
+    updated_at: Date;
+    deleted_at: Date;
+  } | null;
+  created_at?: Date;
+  updated_at?: Date;
 }

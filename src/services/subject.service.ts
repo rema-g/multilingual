@@ -55,27 +55,22 @@ export class SubjectService {
       }
     }
 
-    return (await subjectRepository.findById(id)) as Subject;
+    return (await subjectRepository.findById(id));
   }
 
-  async deleteSubject(id: number): Promise<boolean> {
+  async deleteSubject(id: number): Promise<Subject | null> {
     const subject = await subjectRepository.findById(id);
-    if (!subject) throw new HttpError(SubjectErrors.NOT_FOUND, 404);
-  
-    const deletedAtPayload = {
-      created_at: subject.created_at,
-      updated_at: subject.updated_at,
-      deleted_at: new Date(),
-    };
-  
-    await subject.update({
-      status: 'inactive',
-      deleted_at: deletedAtPayload,
-    });
-  
-    return true;
+    if (!subject) throw new HttpError("Subject not found", 404);
+
+    return subjectRepository.softDeleteSubject(id);
   }
+
+  async softDeleteTranslation(id: number, language_code: string): Promise<SubjectTranslationAttributes  | null> {
+    const subject = await subjectRepository.findById(id);
+    if (!subject) throw new HttpError("Subject not found", 404);
   
+    return subjectRepository.softDeleteTranslation(id, language_code);
+  }
 
   async getSubjects(filters: any): Promise<any> {
     return subjectRepository.findAllWithFilters(filters);

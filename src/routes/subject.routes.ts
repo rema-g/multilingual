@@ -10,5 +10,6 @@ router.get('/:id', validateQuery, (req, res) => SubjectController.getById(req, r
 router.post('/', validateBody, (req, res) => SubjectController.create(req, res));
 router.put('/:id', validateBody, (req, res) => SubjectController.update(req, res));
 router.delete('/:id', validateQuery, (req, res) => SubjectController.remove(req, res));
+router.delete("/:id/translations/:language_code", validateQuery, (req, res) =>SubjectController.removeTranslation(req, res));
 
 export default router;

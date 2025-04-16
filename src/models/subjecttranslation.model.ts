@@ -63,6 +63,14 @@ export const initSubjectTranslationModel = (
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      deleted_at: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: "active",
+      }      
     },
     {
       tableName: "subjectTranslations",

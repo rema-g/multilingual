@@ -61,10 +61,44 @@ export class SubjectRepository {
     return this.findById(subject.id);
   }
 
-  async delete(subject: Subject): Promise<boolean> {
-    await subject.destroy();
-    return true;
-  }
+async softDeleteSubject(subjectId: number): Promise<Subject | null> {
+  const subject = await this.findById(subjectId);
+  if (!subject) return null;
+
+  const deletedAtPayload = {
+    created_at: subject.created_at,
+    updated_at: subject.updated_at,
+    deleted_at: new Date(),
+  };
+
+  await subject.update({
+    status: 'inactive',
+    deleted_at: deletedAtPayload,
+  });
+
+  return subject;
+}
+
+async softDeleteTranslation(subject_id: number, language_code: string): Promise<SubjectTranslationAttributes  | null> {
+  const translation = await models.SubjectTranslation.findOne({
+    where: {
+      subject_id,
+      language_code,
+    },
+  });
+
+  if (!translation) return null;
+  const deletedAtPayload = {
+    created_at: translation.createdAt,
+    updated_at: translation.updatedAt,
+    deleted_at: new Date(),
+  };
+
+  await translation.update({ status: "inactive",
+    deleted_at: deletedAtPayload,
+   });
+  return translation;
+}
 
   async findAllWithFilters({
     page,
