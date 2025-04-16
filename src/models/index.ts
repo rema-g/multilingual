@@ -5,6 +5,7 @@ import {
   initSubjectTranslationModel,
   SubjectTranslation,
 } from "./subjecttranslation.model";
+import { initUserModel, User } from './user.model';
 
 const env = process.env.NODE_ENV || "development";
 const dbConfig = config[env];
@@ -23,6 +24,7 @@ const sequelize = new Sequelize(
 
 initSubjectModel(sequelize);
 initSubjectTranslationModel(sequelize);
+initUserModel(sequelize);
 
 Subject.hasMany(SubjectTranslation, {
   foreignKey: "subject_id",
@@ -40,8 +42,9 @@ const models = {
   Sequelize,
   Subject,
   SubjectTranslation,
+  User,
 };
 
 export { sequelize };
-export { Subject, SubjectTranslation };
+export { Subject, SubjectTranslation, User };
 export default models;
