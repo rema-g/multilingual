@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { SubjectController } from '../controllers/subject.controller';
 import { validateQuery } from '../middleware/validateQuery.middleware';
 import { validateBody } from '../middleware/validateBody.middleware';
+// import { wrapController } from '../utils/wrapController';
 
 const router = Router();
 
