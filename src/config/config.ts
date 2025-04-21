@@ -1,29 +1,23 @@
-import { Dialect } from 'sequelize';
-import * as dotenv from 'dotenv';
-
+// config/config.ts
+import dotenv from "dotenv";
 dotenv.config();
 
-interface DBConfig {
-  username: string;
-  password: string;
-  database: string;
-  host: string;
-  port: number;
-  dialect: Dialect;
-}
-
-interface SequelizeConfig {
-  [key: string]: DBConfig;
-}
-
-const config: SequelizeConfig = {
-  development: {
-    username: process.env.DB_USERNAME || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'multilingual',
-    host: process.env.DB_HOST || 'localhost',
+const config = {
+  database: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD ,
+    name: process.env.DB_NAME,
     port: Number(process.env.DB_PORT),
-    dialect: (process.env.DIALECT as Dialect) || 'mysql',
+    host: process.env.DB_HOST,
+    dialect: "mysql" as const,
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET as string,
+    expiresIn: process.env.EXPIRES_IN as string,
+  },
+  app: {
+    port: process.env.PORT,
+    env: process.env.NODE_ENV,
   },
 };
 
