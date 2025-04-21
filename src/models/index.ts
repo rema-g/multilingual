@@ -7,13 +7,12 @@ import {
 } from "./subjecttranslation.model";
 import { initUserModel, User } from './user.model';
 
-const env = process.env.NODE_ENV || "development";
-const dbConfig = config[env];
+const dbConfig =config.database;;
 
 const sequelize = new Sequelize(
-  dbConfig.database,
-  dbConfig.username,
-  dbConfig.password,
+  dbConfig.name!,
+  dbConfig.username!,
+  dbConfig.password!,
   {
     host: dbConfig.host,
     port: dbConfig.port,
