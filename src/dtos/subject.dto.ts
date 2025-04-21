@@ -26,3 +26,8 @@ export interface SubjectTranslationAttributes {
   created_at?: Date;
   updated_at?: Date;
 }
+
+export interface LoginDTO {
+  email: string;
+  password: string;
+}
