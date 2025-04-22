@@ -4,7 +4,7 @@ dotenv.config();
 
 const config = {
   database: {
-    username: process.env.DB_USER,
+    username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD ,
     name: process.env.DB_NAME,
     port: Number(process.env.DB_PORT),
@@ -16,8 +16,7 @@ const config = {
     expiresIn: process.env.EXPIRES_IN as string,
   },
   app: {
-    port: process.env.PORT,
-    env: process.env.NODE_ENV,
+    port: process.env.APP_PORT || 3000,
   },
 };
 

@@ -35,8 +35,13 @@ export class UserService {
         const refresh_token = jwt.sign( payload, JWT_SECRET,
             { expiresIn: JWT_EXPIRES_IN } as SignOptions
           );
-    
-        const userSafe = { ...user.get(), password: undefined };
+
+        await this.userRepository.updateRefreshToken(user.id, refresh_token);
+
+        const updatedUser = await this.userRepository.findById(user.id);
+        if (!updatedUser) throw new HttpError("User not found after login", 500);
+
+        const userSafe = { ...updatedUser.get(), password: undefined };
     
         return { access_token: access_token,refresh_token:refresh_token ,user: userSafe };
       }
