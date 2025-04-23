@@ -1,73 +1,97 @@
-import { RequestHandler, Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
-import { subjectBodySchema } from '../schema/subject.schema';
+import { subjectBodySchema, subjectQuerySchema } from '../schema/subject.schema'; 
 
-const noHTMLScript = (val: string) => !/<[^>]*script|<[^>]+>/i.test(val);
+const noHTMLScript = (val?: string) => typeof val === 'string' && !/<[^>]*script|<[^>]+>/i.test(val);
 
-const querySchema = z.object({
-  page: z.string().optional().refine(val => !isNaN(Number(val ?? '')), {
-    message: 'page must be a valid number',
+const querySchema = subjectQuerySchema;
+
+const idParamSchema = z.object({
+  id: z.string().refine(val => /^\d+$/.test(val), {
+    message: 'id must be a numeric string',
   }),
-  limit: z.string().optional().refine(val => !isNaN(Number(val ?? '')), {
-    message: 'limit must be a valid number',
+});
+
+const idAndLangParamSchema = z.object({
+  id: z.string().refine(val => /^\d+$/.test(val), {
+    message: 'id must be a numeric string',
   }),
-  sort: z.string().optional().refine(val => noHTMLScript(val ?? ''), {
-    message: 'sort must not contain HTML or script tags',
-  }),
-  search: z.string().optional().refine(val => noHTMLScript(val ?? ''), {
-    message: 'search must not contain HTML or script tags',
-  }),
-  exam_type: z.string().optional().refine(val => noHTMLScript(val ?? ''), {
-    message: 'exam_type must not contain HTML or script tags',
+  language_code: z.string().refine(val => /^[a-z]{2}$/i.test(val), {
+    message: 'language_code must be a 2-letter code',
   }),
 });
 
 type ValidationMap = {
-  [path: string]: {
+  [pathPattern: string]: {
     [method: string]: {
       query?: z.ZodSchema;
       body?: z.ZodSchema;
+      params?: z.ZodSchema;
     };
   };
 };
 
 const validationConfig: ValidationMap = {
-  '/subjects': {
+  '/api/subjects': {
     get: { query: querySchema },
     post: { body: subjectBodySchema },
   },
+  '/api/subjects/:id': {
+    get: { params: idParamSchema },
+    put: { body: subjectBodySchema, params: idParamSchema },
+    delete: { params: idParamSchema },
+  },
+  '/api/subjects/:id/translations/:language_code': {
+    delete: { params: idAndLangParamSchema },
+  },
 };
 
-export const validateRequest = (req: Request, res: Response, next: NextFunction): void=> {
-  const path = req.path;
+function matchPath(reqPath: string): string | undefined {
+    const cleanPath = reqPath.replace(/\?.*$/, '').replace(/\/$/, '');
+  
+    return Object.keys(validationConfig).find((pattern) => {
+      const regex = new RegExp('^' + pattern.replace(/:[^/]+/g, '[^/]+') + '$');
+      return regex.test(cleanPath);
+    });
+}  
+
+export const validateRequest = (req: Request, res: Response, next: NextFunction): void => {
+
+  const fullPath = (req.baseUrl + req.path).replace(/\/$/, '');
+
+  const matchedPath = matchPath(fullPath);
   const method = req.method.toLowerCase();
 
-  const methodSchemas = validationConfig[path]?.[method];
+  const methodSchemas = matchedPath ? validationConfig[matchedPath]?.[method] : null;
 
-  if (!methodSchemas) return next();
+  if (!methodSchemas) {
+    next();
+    return;
+  }
 
   if (methodSchemas.query) {
     const result = methodSchemas.query.safeParse(req.query);
     if (!result.success) {
-       res.status(400).json({
-        message: 'Query validation failed',
-        errors: result.error.errors,
-      });
-      return;
+      res.status(400).json({ message: 'Query validation failed', errors: result.error.errors });
+      return; 
     }
   }
 
-  // Validate body
   if (methodSchemas.body) {
     const result = methodSchemas.body.safeParse(req.body);
     if (!result.success) {
-       res.status(400).json({
-        message: 'Body validation failed',
-        errors: result.error.errors,
-      });
+      res.status(400).json({ message: 'Body validation failed', errors: result.error.errors });
       return;
     }
   }
 
-  return next();
+  if (methodSchemas.params) {
+    const result = methodSchemas.params.safeParse(req.params);
+    if (!result.success) {
+      res.status(400).json({ message: 'Params validation failed', errors: result.error.errors });
+      return;
+    }
+  }
+
+  next();
 };

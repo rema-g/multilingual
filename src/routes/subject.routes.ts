@@ -1,16 +1,14 @@
 import { Router } from 'express';
 import { SubjectController } from '../controllers/subject.controller';
-import { validateQuery } from '../middleware/validateQuery.middleware';
-import { validateBody } from '../middleware/validateBody.middleware';
-// import { wrapController } from '../utils/wrapController';
+import { validateRequest } from '../middleware/validateRequest.middleware';
 
 const router = Router();
 
-router.get('/', validateQuery, (req, res) => SubjectController.get(req, res));
-router.get('/:id', validateQuery, (req, res) => SubjectController.getById(req, res));
-router.post('/', validateBody, (req, res) => SubjectController.create(req, res));
-router.put('/:id', validateBody, (req, res) => SubjectController.update(req, res));
-router.delete('/:id', validateQuery, (req, res) => SubjectController.remove(req, res));
-router.delete("/:id/translations/:language_code", validateQuery, (req, res) =>SubjectController.removeTranslation(req, res));
+router.get('/', validateRequest, (req, res) => SubjectController.get(req, res));
+router.get('/:id', validateRequest, (req, res) => SubjectController.getById(req, res));
+router.post('/', validateRequest, (req, res) => SubjectController.create(req, res));
+router.put('/:id', validateRequest, (req, res) => SubjectController.update(req, res));
+router.delete('/:id', validateRequest, (req, res) => SubjectController.remove(req, res));
+router.delete("/:id/translations/:language_code", validateRequest, (req, res) =>SubjectController.removeTranslation(req, res));
 
 export default router;
