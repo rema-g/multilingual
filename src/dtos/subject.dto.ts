@@ -7,8 +7,8 @@ export interface SubjectAttributes {
     updated_at: Date;
     deleted_at: Date;
   } | null;
-  created_at?: Date;
-  updated_at?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface SubjectTranslationAttributes {

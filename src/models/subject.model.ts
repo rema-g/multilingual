@@ -9,7 +9,7 @@ import { SubjectTranslation } from "./subjecttranslation.model";
 import { SubjectAttributes } from "../dtos/subject.dto";
 
 export interface SubjectCreationAttributes
-  extends Optional<SubjectAttributes, "id" | "created_at" | "updated_at"> {}
+  extends Optional<SubjectAttributes, "id" | "createdAt" | "updatedAt"> {}
 
 export class Subject
   extends Model<SubjectAttributes, SubjectCreationAttributes>
@@ -23,8 +23,8 @@ export class Subject
     updated_at: Date;
     deleted_at: Date;
   } | null;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 
   public getTranslations!: HasManyGetAssociationsMixin<SubjectTranslation>;
 
@@ -59,8 +59,14 @@ export const initSubjectModel = (sequelize: Sequelize): typeof Subject => {
         allowNull: true,
         defaultValue: null,
       },
-      created_at: DataTypes.DATE,
-      updated_at: DataTypes.DATE,
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      }
     },
     {
       sequelize,

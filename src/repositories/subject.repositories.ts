@@ -66,8 +66,8 @@ async softDeleteSubject(subjectId: number): Promise<Subject | null> {
   if (!subject) return null;
 
   const deletedAtPayload = {
-    created_at: subject.created_at,
-    updated_at: subject.updated_at,
+    created_at: subject.createdAt,
+    updated_at: subject.updatedAt,
     deleted_at: new Date(),
   };
 
