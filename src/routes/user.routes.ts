@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/user.controller';
-import { validateRequest } from '../middleware/validateRequest.middleware';
+import { validateSession } from '../middleware/auth.middleware';
 
 const router = Router();
 
-router.post('/create', validateRequest, (req, res) =>UserController.create(req, res));
-router.post('/login', validateRequest, (req, res) =>UserController.login(req, res));
+router.post('/register', UserController.create);
+router.post('/login', UserController.login);
+router.post('/logout', validateSession, UserController.logout);
 
 export default router;

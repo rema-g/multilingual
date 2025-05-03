@@ -9,7 +9,7 @@ export class UserRepository {
     return await User.findOne({ where: { email } });
   }
 
-  public async updateRefreshToken(userId: number, token: string): Promise<void> {
+  public async updateRefreshToken(userId: number, token: string | null): Promise<void> {
     await User.update({ refresh_token: token }, { where: { id: userId } });
   }
   

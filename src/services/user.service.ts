@@ -7,7 +7,6 @@ import { UserCreationAttributes } from "../models/user.model";
 import { HttpError } from "../utils/HttpError";
 import config from '../config/config';
 
-
 const JWT_SECRET = config.jwt.secret;
 const JWT_EXPIRES_IN = config.jwt.expiresIn;
 
@@ -28,11 +27,11 @@ export class UserService {
         
         const payload = { id: user.id, email: user.email, role: user.role }
 
-        const access_token = jwt.sign( payload, JWT_SECRET,
+        const access_token = jwt.sign(payload, JWT_SECRET,
           { expiresIn: JWT_EXPIRES_IN } as SignOptions
         );
 
-        const refresh_token = jwt.sign( payload, JWT_SECRET,
+        const refresh_token = jwt.sign(payload, JWT_SECRET,
             { expiresIn: JWT_EXPIRES_IN } as SignOptions
           );
 
@@ -43,6 +42,10 @@ export class UserService {
 
         const userSafe = { ...updatedUser.get(), password: undefined };
     
-        return { access_token: access_token,refresh_token:refresh_token ,user: userSafe };
-      }
+        return { access_token: access_token, refresh_token: refresh_token, user: userSafe };
+    }
+
+    public async logout(userId: number): Promise<void> {
+        await this.userRepository.updateRefreshToken(userId, null);
+    }
 }

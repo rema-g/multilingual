@@ -1,14 +1,18 @@
 import { Router } from 'express';
 import { SubjectController } from '../controllers/subject.controller';
 import { validateRequest } from '../middleware/validateRequest.middleware';
+import { validateSession } from '../middleware/auth.middleware';
 
 const router = Router();
 
-router.get('/', validateRequest, (req, res) => SubjectController.get(req, res));
-router.get('/:id', validateRequest, (req, res) => SubjectController.getById(req, res));
-router.post('/', validateRequest, (req, res) => SubjectController.create(req, res));
-router.put('/:id', validateRequest, (req, res) => SubjectController.update(req, res));
-router.delete('/:id', validateRequest, (req, res) => SubjectController.remove(req, res));
-router.delete("/:id/translations/:language_code", validateRequest, (req, res) =>SubjectController.removeTranslation(req, res));
+// Apply validateSession middleware to all routes
+router.use(validateSession);
+
+router.get('/', validateRequest, SubjectController.get);
+router.post('/', validateRequest, SubjectController.create);
+router.get('/:id', validateRequest, SubjectController.getById);
+router.put('/:id', validateRequest, SubjectController.update);
+router.delete('/:id', validateRequest, SubjectController.remove);
+router.delete('/:id/translations/:language_code', validateRequest, SubjectController.removeTranslation);
 
 export default router;
