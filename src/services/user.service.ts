@@ -9,6 +9,7 @@ import config from '../config/config';
 
 const JWT_SECRET = config.jwt.secret;
 const JWT_EXPIRES_IN = config.jwt.expiresIn;
+const REFRESH_EXPIRES_IN = config.jwt.refreshExpiresIn
 
 export class UserService {
     private userRepository = new UserRepository();
@@ -32,7 +33,7 @@ export class UserService {
         );
 
         const refresh_token = jwt.sign(payload, JWT_SECRET,
-            { expiresIn: JWT_EXPIRES_IN } as SignOptions
+            { expiresIn: REFRESH_EXPIRES_IN } as SignOptions
           );
 
         await this.userRepository.updateRefreshToken(user.id, refresh_token);

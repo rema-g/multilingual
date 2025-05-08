@@ -14,6 +14,7 @@ const config = {
   jwt: {
     secret: process.env.JWT_SECRET as string,
     expiresIn: process.env.EXPIRES_IN as string,
+    refreshExpiresIn: process.env.REFRESH_EXPIRES_IN as string
   },
   app: {
     port: process.env.APP_PORT || 3000,

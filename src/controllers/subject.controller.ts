@@ -13,8 +13,8 @@ export class SubjectController {
   ): Promise<void> {
     const task = "GET_ALL_SUBJECT";
     try {
-      const filters = this.parseFilters(req);
-      const result = await this.subjectService.getSubjects(filters);
+      const filters = SubjectController.parseFilters(req);
+      const result = await SubjectController.subjectService.getSubjects(filters);
       console.log(task + "_SUCCESS");
       ApiResponse.success(res, result, "Subjects fetched successfully");
     } catch (err) {
@@ -26,7 +26,7 @@ export class SubjectController {
   public static async getById(req: Request, res: Response): Promise<void> {
     const task = "GET_SUBJECT";
     try {
-      const subject = await this.subjectService.getSubjectById(+req.params.id);
+      const subject = await SubjectController.subjectService.getSubjectById(+req.params.id);
       if (!subject) {
         return ApiResponse.error(res, {}, SubjectErrors.NOT_FOUND, 404);
       }
@@ -41,7 +41,7 @@ export class SubjectController {
   public static async create(req: Request, res: Response): Promise<void> {
     const task = "CREATE_SUBJECT";
     try {
-      const subject = await this.subjectService.createSubject(req.body);
+      const subject = await SubjectController.subjectService.createSubject(req.body);
       console.log(task + "_SUCCESS");
       ApiResponse.success(res, subject, "Subject created successfully", 201);
     } catch (err) {
@@ -57,7 +57,7 @@ export class SubjectController {
   public static async update(req: Request, res: Response): Promise<void> {
     const task = "UPDATE_SUBJECT";
     try {
-      const subject = await this.subjectService.updateSubject(
+      const subject = await SubjectController.subjectService.updateSubject(
         +req.params.id,
         req.body
       );
@@ -77,7 +77,7 @@ export class SubjectController {
   public static async remove(req: Request, res: Response): Promise<void> {
     const task = "DELETE_SUBJECT";
     try {
-      await this.subjectService.deleteSubject(+req.params.id);
+      await SubjectController.subjectService.deleteSubject(+req.params.id);
       console.log(task + "_SUCCESS");
       ApiResponse.success(res, null, "Subject deleted successfully");
     } catch (err) {
@@ -96,9 +96,9 @@ export class SubjectController {
     const task = "DELETE_TRANSLATION";
   
     try {
-      await this.subjectService.softDeleteTranslation(+id, language_code);
+      await SubjectController.subjectService.softDeleteTranslation(+id, language_code);
       console.log(task + "_SUCCESS");
-      ApiResponse.success(res, null, "Translation soft deleted successfully");
+      ApiResponse.success(res, null, "Translation deleted successfully");
     } catch (err) {
       console.error(task + "_ERROR", err);
       ApiResponse.error(res, err, "Error soft deleting translation");

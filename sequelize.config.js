@@ -5,11 +5,11 @@ const config = require('./src/config/config.ts').default;
 
 module.exports = {
   development: {
-    username: config.database.username,
-    password: config.database.password,
-    database: config.database.name,
-    host: config.database.host,
-    port: config.database.port,
-    dialect: config.database.dialect,
+    username: process.env.DB_USERNAME || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'multilingial_db',
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 3306,
+    dialect: 'mysql',
   }
 };

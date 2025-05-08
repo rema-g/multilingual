@@ -4,14 +4,14 @@ import { HttpError } from '../utils/HttpError';
 import { ApiResponse } from '../utils/response.helpers';
 
 export class UserController {
-  private static userService = new UserService(); // ✅ static property
+  private static userService = new UserService();
 
   public static async create(req: Request, res: Response): Promise<void> {
     const task = "CREATE_USER";
     try {
       const { name, email, password, role } = req.body;
 
-      const user = await UserController.userService.createUser({ name, email, password, role }); // ✅ access via class name
+      const user = await UserController.userService.createUser({ name, email, password, role });
 
       const userSafe = { ...user, password: undefined };
       console.log(task + "_SUCCESS");
@@ -26,8 +26,7 @@ export class UserController {
     try {
       const { email, password } = req.body;
 
-      const result = await UserController.userService.login({ email, password }); // ✅ static access
-
+      const result = await UserController.userService.login({ email, password });
       console.log(task + "_SUCCESS");
       ApiResponse.success(res, result, "Login successful");
     } catch (err: any) {
@@ -43,7 +42,7 @@ export class UserController {
         throw new HttpError("User not authenticated", 401);
       }
 
-      await UserController.userService.logout(userId); // ✅ static access
+      await UserController.userService.logout(userId);
       console.log(task + "_SUCCESS");
       ApiResponse.success(res, null, "Logout successful");
     } catch (err) {
